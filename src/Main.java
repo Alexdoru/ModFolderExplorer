@@ -1,10 +1,6 @@
 import jdk.internal.org.objectweb.asm.ClassReader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +95,45 @@ public class Main {
             }
         }
         System.out.println("Visited " + classCount + " classes in " + (System.currentTimeMillis() - time) + "ms");
+    }
+
+    private static byte[] readClass(InputStream var0) throws IOException {
+        if (var0 == null) {
+            throw new IOException("Class not found");
+        } else {
+            byte[] var2 = new byte[var0.available()];
+            int var3 = 0;
+
+            while (true) {
+                int var4 = var0.read(var2, var3, var2.length - var3);
+                if (var4 == -1) {
+                    byte[] var10;
+                    if (var3 < var2.length) {
+                        var10 = new byte[var3];
+                        System.arraycopy(var2, 0, var10, 0, var3);
+                        var2 = var10;
+                    }
+
+                    var10 = var2;
+                    return var10;
+                }
+
+                var3 += var4;
+                if (var3 == var2.length) {
+                    int var5 = var0.read();
+                    byte[] var6;
+                    if (var5 < 0) {
+                        var6 = var2;
+                        return var6;
+                    }
+
+                    var6 = new byte[var2.length + 1000];
+                    System.arraycopy(var2, 0, var6, 0, var3);
+                    var6[var3++] = (byte) var5;
+                    var2 = var6;
+                }
+            }
+        }
     }
 
 }
