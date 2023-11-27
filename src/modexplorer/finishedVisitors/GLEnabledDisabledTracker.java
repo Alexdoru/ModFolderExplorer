@@ -1,5 +1,8 @@
+package modexplorer.finishedVisitors;
+
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.tree.*;
+import modexplorer.Main;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

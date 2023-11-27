@@ -1,10 +1,19 @@
+package modexplorer.finishedVisitors;
+
 import jdk.internal.org.objectweb.asm.ClassVisitor;
 import jdk.internal.org.objectweb.asm.FieldVisitor;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Opcodes;
+import modexplorer.Main;
 
 import java.util.*;
 
+/**
+ * Points to all the call sites of Enu.values()
+ *
+ * This method performs an Array.clone() operation everytime it is called which can cause a lot
+ * of memory utilisation if called often
+ */
 public class EnumValuesCallsitesFinder extends ClassVisitor {
 
     private static final List<Enumm> enums = new ArrayList<>();

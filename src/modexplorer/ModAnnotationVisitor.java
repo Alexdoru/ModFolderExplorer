@@ -1,3 +1,5 @@
+package modexplorer;
+
 import jdk.internal.org.objectweb.asm.AnnotationVisitor;
 import jdk.internal.org.objectweb.asm.Opcodes;
 

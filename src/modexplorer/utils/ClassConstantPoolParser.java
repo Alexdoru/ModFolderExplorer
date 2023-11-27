@@ -1,4 +1,4 @@
-/***
+package modexplorer.utils; /***
  * This Class is derived from the ASM ClassReader
  * <p>
  * ASM: a very small and fast Java bytecode manipulation framework Copyright (c) 2000-2011 INRIA, France Telecom All

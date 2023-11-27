@@ -1,3 +1,5 @@
+package modexplorer;
+
 import jdk.internal.org.objectweb.asm.ClassReader;
 
 import java.io.*;
