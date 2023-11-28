@@ -3,7 +3,13 @@ package modexplorer;
 import jdk.internal.org.objectweb.asm.ClassReader;
 import modexplorer.classexplorers.ClassExplorer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,24 +20,34 @@ import java.util.zip.ZipEntry;
 public class Main {
 
     private static PrintStream printStream;
-    private static final Pattern zipJarPattern = Pattern.compile("(.+).(zip|jar)$");
-    private static final Pattern classFilePattern = Pattern.compile("[^\\s$]+(\\$\\S+)?\\.class$");
+    private static final Pattern zipJarFilePattern = Pattern.compile("(.+)\\.(zip|jar)$");
+    private static final Pattern classFilePattern = Pattern.compile("(.+)\\.class$");
+    private static final Pattern classPattern = Pattern.compile("[^\\s$]+(\\$\\S+)?\\.class$");
     private static final List<ClassExplorer> classExplorers = new ArrayList<>();
 
     /**
-     * args[0] should be your mods folder, for instance : args[0] = "C:/MultiMC/instances/GTNH/.minecraft/mods"
+     * args[] should contain paths to folders containing .jar or .class files to explore.
+     * For example :
+     * - args[0] = "C:/MultiMC/instances/GTNH/.minecraft/mods"
+     * - args[1] = "D:/MinecraftStuff/MinecraftSource"
      */
     public static void main(String[] args) {
-        setupLogger();
-        final File modFolder = new File(args[0]);
-        if (!modFolder.exists()) {
-            throw new IllegalStateException("Mod folder path is invalid");
+        if (args == null || args.length == 0) {
+            throw new RuntimeException("Mod folder path is invalid");
         }
-        final List<File> modList = new ArrayList<>();
-        fillModList(modFolder, modList);
-        System.out.println("Identified " + modList.size() + " .jar files");
+        final List<File> modFileList = new ArrayList<>();
+        final List<File> classFileList = new ArrayList<>();
+        for (String path : args) {
+            final File folder = new File(path);
+            if (!folder.exists()) {
+                throw new RuntimeException("Folder path is invalid : " + path);
+            }
+            fillFileLists(folder, modFileList, classFileList);
+        }
+        System.out.println("Identified " + modFileList.size() + " .jar files and " + classFileList.size() + " .class files");
+        setupLogger();
         registerExplorers();
-        exploreMods(modList);
+        exploreFiles(modFileList, classFileList);
     }
 
     private static void setupLogger() {
@@ -64,23 +80,27 @@ public class Main {
         printStream.println(message);
     }
 
-    private static void fillModList(File modFolder, List<File> files) {
-        final File[] fList = modFolder.listFiles();
+    private static void fillFileLists(File folder, List<File> jarFiles, List<File> classFiles) {
+        final File[] fList = folder.listFiles();
         if (fList != null) {
             for (final File file : fList) {
-                if (file.isFile() && zipJarPattern.matcher(file.getName()).matches()) {
-                    files.add(file);
+                if (file.isFile()) {
+                    if (zipJarFilePattern.matcher(file.getName()).matches()) {
+                        jarFiles.add(file);
+                    } else if (classFilePattern.matcher(file.getName()).matches()) {
+                        classFiles.add(file);
+                    }
                 } else if (file.isDirectory()) {
-                    fillModList(file, files);
+                    fillFileLists(file, jarFiles, classFiles);
                 }
             }
         }
     }
 
-    private static void exploreMods(List<File> modList) {
+    private static void exploreFiles(List<File> jarFiles, List<File> classFiles) {
         final long time = System.currentTimeMillis();
         int classCount = 0;
-        for (final File file : modList) {
+        for (final File file : jarFiles) {
             try (final JarFile jar = new JarFile(file)) {
                 if (file.getName() != null && file.getName().startsWith("forgelin")) {
                     continue;
@@ -89,28 +109,39 @@ public class Main {
                     if (ze.getName() != null && ze.getName().startsWith("__MACOSX")) {
                         continue;
                     }
-                    if (classFilePattern.matcher(ze.getName()).matches()) {
-                        try {
-                            final ClassReader classReader = new ClassReader(jar.getInputStream(ze));
-                            for (ClassExplorer explorer : classExplorers) {
-                                explorer.visitClass(classReader, file.getName());
-                            }
-                            //classReader.accept(new ModClassVisitor(file.getName()), ClassReader.SKIP_DEBUG);
+                    if (classPattern.matcher(ze.getName()).matches()) {
+                        try (final InputStream inputStream = jar.getInputStream(ze)) {
+                            exploreClass(readClass(inputStream), file.getName());
                             classCount++;
                         } catch (Exception e) {
-                            jar.close();
                             System.out.println("There was an error attempting to parse " + file + "/" + ze);
                         }
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Error parsing " + file);
+                System.out.println("Error reading " + file);
+            }
+        }
+        for (File file : classFiles) {
+            try (InputStream inputStream = Files.newInputStream(file.toPath())) {
+                exploreClass(readClass(inputStream), file.getPath());
+                classCount++;
+            } catch (IOException e) {
+                System.out.println("Error reading " + file);
             }
         }
         System.out.println("Visited " + classCount + " classes in " + (System.currentTimeMillis() - time) + "ms");
         for (ClassExplorer explorer : classExplorers) {
             explorer.onSearchEnd();
         }
+    }
+
+    private static void exploreClass(byte[] classBytes, String fileName) {
+        final ClassReader classReader = new ClassReader(classBytes);
+        for (ClassExplorer explorer : classExplorers) {
+            explorer.visitClass(classReader, fileName);
+        }
+        //classReader.accept(new ModClassVisitor(fileName), ClassReader.SKIP_DEBUG);
     }
 
     private static byte[] readClass(InputStream var0) throws IOException {
