@@ -1,4 +1,4 @@
-package modexplorer.finishedVisitors;
+package modexplorer.classexplorers;
 
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.tree.*;
@@ -14,15 +14,16 @@ import java.util.Map;
 /**
  * Counts all the calls to GL11.glEnabled() and to GL11.glDisabled() and displays & counts which code is enabled/disabled
  */
-public class GLEnabledDisabledTracker {
+public class GLEnabledDisabledTracker implements ClassExplorer {
 
     private static final String GL11 = "org/lwjgl/opengl/GL11";
     private static final Map<Integer, Integer> mapEnabled = new HashMap<>();
     private static final Map<Integer, Integer> mapDisabled = new HashMap<>();
 
-    public static void readClass(ClassReader classReader) {
+    @Override
+    public void visitClass(ClassReader cr, String fileName) {
         ClassNode cn = new ClassNode();
-        classReader.accept(cn, ClassReader.SKIP_DEBUG);
+        cr.accept(cn, ClassReader.SKIP_DEBUG);
         for (MethodNode mn : cn.methods) {
             for (AbstractInsnNode node : mn.instructions.toArray()) {
                 if (node instanceof MethodInsnNode) {
@@ -55,7 +56,8 @@ public class GLEnabledDisabledTracker {
         }
     }
 
-    public static void onFinished() {
+    @Override
+    public void onSearchEnd() {
 
         final int modif = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
         final Map<Integer, String> glCaps = new HashMap<>();

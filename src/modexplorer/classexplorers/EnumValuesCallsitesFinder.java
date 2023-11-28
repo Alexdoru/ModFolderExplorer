@@ -1,20 +1,17 @@
-package modexplorer.finishedVisitors;
+package modexplorer.classexplorers;
 
-import jdk.internal.org.objectweb.asm.ClassVisitor;
-import jdk.internal.org.objectweb.asm.FieldVisitor;
-import jdk.internal.org.objectweb.asm.MethodVisitor;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import jdk.internal.org.objectweb.asm.*;
 import modexplorer.Main;
 
 import java.util.*;
 
 /**
  * Points to all the call sites of Enu.values()
- *
+ * <p>
  * This method performs an Array.clone() operation everytime it is called which can cause a lot
  * of memory utilisation if called often
  */
-public class EnumValuesCallsitesFinder extends ClassVisitor {
+public class EnumValuesCallsitesFinder extends ClassVisitor implements ClassExplorer {
 
     private static final List<Enumm> enums = new ArrayList<>();
     private static final List<CallSite> callsites = new ArrayList<>();
@@ -23,6 +20,11 @@ public class EnumValuesCallsitesFinder extends ClassVisitor {
     private String classname;
     private boolean isEnum;
     private int enumFields;
+
+    public EnumValuesCallsitesFinder() {
+        super(Opcodes.ASM5);
+        this.fileName = null;
+    }
 
     public EnumValuesCallsitesFinder(String fileName) {
         super(Opcodes.ASM5);
@@ -115,7 +117,13 @@ public class EnumValuesCallsitesFinder extends ClassVisitor {
         }
     }
 
-    public static void onSearchEnd() {
+    @Override
+    public void visitClass(ClassReader cr, String fileName) {
+        cr.accept(new EnumValuesCallsitesFinder(fileName), ClassReader.SKIP_DEBUG);
+    }
+
+    @Override
+    public void onSearchEnd() {
         enums.sort(null);
         Map<String, List<CallSite>> callSiteMap = new HashMap<>();
         for (CallSite site : callsites) {

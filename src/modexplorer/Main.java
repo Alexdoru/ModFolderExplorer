@@ -1,6 +1,7 @@
 package modexplorer;
 
 import jdk.internal.org.objectweb.asm.ClassReader;
+import modexplorer.classexplorers.ClassExplorer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Main {
     private static PrintStream printStream;
     private static final Pattern zipJarPattern = Pattern.compile("(.+).(zip|jar)$");
     private static final Pattern classFilePattern = Pattern.compile("[^\\s$]+(\\$\\S+)?\\.class$");
+    private static final List<ClassExplorer> classExplorers = new ArrayList<>();
 
     /**
      * args[0] should be your mods folder, for instance : args[0] = "C:/MultiMC/instances/GTNH/.minecraft/mods"
@@ -28,6 +30,7 @@ public class Main {
         final List<File> modList = new ArrayList<>();
         fillModList(modFolder, modList);
         System.out.println("Identified " + modList.size() + " .jar files");
+        registerExplorers();
         exploreMods(modList);
     }
 
@@ -50,6 +53,11 @@ public class Main {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Couldn't create log file");
         }
+    }
+
+    private static void registerExplorers() {
+        // TODO register class explorers here
+        // classExplorers.add(new EnumValuesCallsitesFinder());
     }
 
     public static void log(String message) {
@@ -84,7 +92,10 @@ public class Main {
                     if (classFilePattern.matcher(ze.getName()).matches()) {
                         try {
                             final ClassReader classReader = new ClassReader(jar.getInputStream(ze));
-                            classReader.accept(new ModClassVisitor(file.getName()), ClassReader.SKIP_DEBUG);
+                            for (ClassExplorer explorer : classExplorers) {
+                                explorer.visitClass(classReader, file.getName());
+                            }
+                            //classReader.accept(new ModClassVisitor(file.getName()), ClassReader.SKIP_DEBUG);
                             classCount++;
                         } catch (Exception e) {
                             jar.close();
@@ -97,6 +108,9 @@ public class Main {
             }
         }
         System.out.println("Visited " + classCount + " classes in " + (System.currentTimeMillis() - time) + "ms");
+        for (ClassExplorer explorer : classExplorers) {
+            explorer.onSearchEnd();
+        }
     }
 
     private static byte[] readClass(InputStream var0) throws IOException {
