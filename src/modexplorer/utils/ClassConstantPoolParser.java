@@ -1,4 +1,4 @@
-package modexplorer.utils; /***
+/***
  * This Class is derived from the ASM ClassReader
  * <p>
  * ASM: a very small and fast Java bytecode manipulation framework Copyright (c) 2000-2011 INRIA, France Telecom All
@@ -20,13 +20,15 @@ package modexplorer.utils; /***
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package modexplorer.utils;
+
 import jdk.internal.org.objectweb.asm.Opcodes;
 
 import java.nio.charset.StandardCharsets;
 
 /**
- * Using this class to search for a String reference is > 40 times faster than parsing a class with a ClassReader +
- * ClassNode while using way less RAM
+ * Using this class to search for a (single) String reference is > 40 times faster than parsing a class with a
+ * ClassReader + ClassNode while using way less RAM
  */
 public class ClassConstantPoolParser {
 
@@ -55,7 +57,7 @@ public class ClassConstantPoolParser {
      * Returns true if the constant pool of the class represented by this byte array contains on of the Strings we are looking
      * for
      */
-    public boolean parse(byte[] basicClass) {
+    public boolean find(byte[] basicClass) {
         if (basicClass == null || basicClass.length == 0) {
             return false;
         }
@@ -64,10 +66,10 @@ public class ClassConstantPoolParser {
             return false;
         }
         // parses the constant pool
-        int n = readUnsignedShort(8, basicClass);
+        final int n = readUnsignedShort(8, basicClass);
         int index = 10;
         for (int i = 1; i < n; ++i) {
-            int size;
+            final int size;
             switch (basicClass[index]) {
                 case FIELD:
                 case METH:
@@ -86,12 +88,12 @@ public class ClassConstantPoolParser {
                 case UTF8:
                     final int strLen = readUnsignedShort(index + 1, basicClass);
                     size = 3 + strLen;
-                    label:
+                    stringLoop:
                     for (byte[] bytes : BYTES_TO_SEARCH) {
                         if (strLen == bytes.length) {
                             for (int j = index + 3; j < index + 3 + strLen; j++) {
                                 if (basicClass[j] != bytes[j - (index + 3)]) {
-                                    break label;
+                                    continue stringLoop;
                                 }
                             }
                             return true;
