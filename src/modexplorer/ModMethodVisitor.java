@@ -39,9 +39,16 @@ public class ModMethodVisitor extends MethodVisitor {
     //}
 
     //@Override
+    //public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+    //    if (owner.equals("") && name.equals("")) {
+    //        log("field access " + name);
+    //    }
+    //}
+
+    //@Override
     //public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
     //    if (owner.equals("") && name.equals("")) {
-    //        log();
+    //        log("calls " + owner + "." + name + ";" + desc);
     //    }
     //}
 

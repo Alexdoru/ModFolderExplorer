@@ -9,7 +9,7 @@ import java.util.*;
  * Points to all the call sites of Enum.values()
  * <p>
  * This method performs an Array.clone() operation everytime it is called which can cause a lot
- * of memory utilisation if called often
+ * of memory utilisation when called often on large enums
  */
 public class EnumValuesCallsitesFinder extends ClassVisitor implements ClassExplorer {
 

@@ -73,7 +73,9 @@ public class Main {
 
     private static void registerExplorers() {
         // TODO register class explorers here
+        // classExplorers.add(new ClassTransformerFinder());
         // classExplorers.add(new EnumValuesCallsitesFinder());
+        // classExplorers.add(new GLEnabledDisabledTracker());
     }
 
     public static void log(String message) {
