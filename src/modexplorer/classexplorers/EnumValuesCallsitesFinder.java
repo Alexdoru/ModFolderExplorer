@@ -6,7 +6,7 @@ import modexplorer.Main;
 import java.util.*;
 
 /**
- * Points to all the call sites of Enu.values()
+ * Points to all the call sites of Enum.values()
  * <p>
  * This method performs an Array.clone() operation everytime it is called which can cause a lot
  * of memory utilisation if called often
