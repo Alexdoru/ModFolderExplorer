@@ -22,12 +22,12 @@ public class EnumValuesCallsitesFinder extends ClassVisitor implements ClassExpl
     private int enumFields;
 
     public EnumValuesCallsitesFinder() {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         this.fileName = null;
     }
 
     public EnumValuesCallsitesFinder(String fileName) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         this.fileName = fileName;
     }
 
@@ -69,7 +69,7 @@ public class EnumValuesCallsitesFinder extends ClassVisitor implements ClassExpl
         private final String desc;
 
         public EnumMethodVisitor(String methodName, String desc) {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM9);
             this.methodName = methodName;
             this.desc = desc;
         }

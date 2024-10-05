@@ -12,11 +12,11 @@ public class ClassTransformerFinder extends ClassVisitor implements ClassExplore
     private String classname;
 
     public ClassTransformerFinder() {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
     }
 
     public ClassTransformerFinder(String fileName) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         this.fileName = fileName;
     }
 

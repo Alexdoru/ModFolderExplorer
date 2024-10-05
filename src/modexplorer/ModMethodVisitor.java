@@ -10,7 +10,7 @@ public class ModMethodVisitor extends MethodVisitor {
     private final String desc;
 
     public ModMethodVisitor(String classLocation, String methodName, String desc) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         this.classLocation = classLocation;
         this.methodName = methodName;
         this.desc = desc;

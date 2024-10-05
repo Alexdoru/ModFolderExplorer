@@ -6,7 +6,7 @@ import org.objectweb.asm.Opcodes;
 public class ModAnnotationVisitor extends AnnotationVisitor {
 
     public ModAnnotationVisitor() {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
     }
 
     @Override

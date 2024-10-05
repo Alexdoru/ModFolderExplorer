@@ -9,7 +9,7 @@ public class ModClassVisitor extends ClassVisitor {
     private String classname;
 
     public ModClassVisitor(String fileName) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         this.fileName = fileName;
     }
 

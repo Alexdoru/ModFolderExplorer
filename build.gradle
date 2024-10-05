@@ -18,5 +18,10 @@ sourceSets {
 }
 
 dependencies {
-    implementation 'org.ow2.asm:asm-debug-all:5.0.3'
+    def asmVersion = '9.7'
+    implementation("org.ow2.asm:asm:${asmVersion}")
+    implementation("org.ow2.asm:asm-commons:${asmVersion}")
+    implementation("org.ow2.asm:asm-tree:${asmVersion}")
+    implementation("org.ow2.asm:asm-analysis:${asmVersion}")
+    implementation("org.ow2.asm:asm-util:${asmVersion}")
 }
