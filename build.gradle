@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'modexplorer'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm-debug-all:5.0.3'
+}

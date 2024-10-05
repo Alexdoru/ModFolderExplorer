@@ -1,6 +1,6 @@
 package modexplorer;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassReader;
 import modexplorer.classexplorers.ClassExplorer;
 
 import java.io.File;
@@ -144,15 +144,15 @@ public class Main {
         //classReader.accept(new ModClassVisitor(fileName), ClassReader.SKIP_DEBUG);
     }
 
-    private static byte[] readClass(InputStream var0) throws IOException {
-        if (var0 == null) {
+    private static byte[] readClass(InputStream is) throws IOException {
+        if (is == null) {
             throw new IOException("Class not found");
         } else {
-            byte[] var2 = new byte[var0.available()];
+            byte[] var2 = new byte[is.available()];
             int var3 = 0;
 
             while (true) {
-                int var4 = var0.read(var2, var3, var2.length - var3);
+                int var4 = is.read(var2, var3, var2.length - var3);
                 if (var4 == -1) {
                     byte[] var10;
                     if (var3 < var2.length) {
@@ -167,7 +167,7 @@ public class Main {
 
                 var3 += var4;
                 if (var3 == var2.length) {
-                    int var5 = var0.read();
+                    int var5 = is.read();
                     byte[] var6;
                     if (var5 < 0) {
                         var6 = var2;

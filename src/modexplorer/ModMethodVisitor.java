@@ -1,7 +1,7 @@
 package modexplorer;
 
-import jdk.internal.org.objectweb.asm.MethodVisitor;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ModMethodVisitor extends MethodVisitor {
 
@@ -17,39 +17,40 @@ public class ModMethodVisitor extends MethodVisitor {
     }
 
     //@Override
-    //public AnnotationVisitor visitAnnotation(String s, boolean b) {
-    //    if (s.equals("Lcpw/mods/fml/common/eventhandler/SubscribeEvent;")) {
+    //public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+    //    if (desc.equals("")) {
     //        log();
     //    }
     //    return null;
     //}
 
     //@Override
-    //public void visitTypeInsn(int i, String s) {
-    //    if (i == Opcodes.NEW && s.equals("org/objectweb/asm/ClassWriter")) {
+    //public void visitTypeInsn(int opcode, String type) {
+    //    if (opcode == Opcodes. && type.equals("")) {
     //        log();
     //    }
     //}
 
     //@Override
-    //public void visitLdcInsn(Object o) {
-    //    if (o instanceof String) {
-    //        if (((String) o).contains("battlegear2")) {
-    //            log();
-    //        }
+    //public void visitLdcInsn(Object cst) {
+    //    if (cst instanceof String) {
+    //        log();
     //    }
     //}
 
-
     //@Override
-    //public void visitMethodInsn(int i, String s, String s1, String s2, boolean b) {
-    //    if (s.equals("org/objectweb/asm/ClassReader") && s1.equals("accept")) {
+    //public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+    //    if (owner.equals("") && name.equals("")) {
     //        log();
     //    }
     //}
 
     private void log() {
         Main.log(this.classLocation + ";" + this.methodName + this.desc);
+    }
+
+    private void log(String s) {
+        Main.log(this.classLocation + ";" + this.methodName + this.desc + " " + s);
     }
 
 }

@@ -31,3 +31,7 @@ bin/
 .DS_Store
 /ModFolderExplorer.iml
 /mcSource_1_7_10/
+
+### Other ###
+.gradle
+/build/

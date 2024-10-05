@@ -1,7 +1,7 @@
 package modexplorer;
 
-import jdk.internal.org.objectweb.asm.AnnotationVisitor;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ModAnnotationVisitor extends AnnotationVisitor {
 

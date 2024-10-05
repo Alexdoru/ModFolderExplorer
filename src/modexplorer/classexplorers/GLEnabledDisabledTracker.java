@@ -1,7 +1,7 @@
 package modexplorer.classexplorers;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.tree.*;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.*;
 import modexplorer.Main;
 
 import java.lang.reflect.Field;

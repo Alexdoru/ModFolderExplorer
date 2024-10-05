@@ -22,7 +22,7 @@
 
 package modexplorer.utils;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 
 import java.nio.charset.StandardCharsets;
 

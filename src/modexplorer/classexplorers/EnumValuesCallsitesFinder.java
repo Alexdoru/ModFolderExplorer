@@ -1,6 +1,6 @@
 package modexplorer.classexplorers;
 
-import jdk.internal.org.objectweb.asm.*;
+import org.objectweb.asm.*;
 import modexplorer.Main;
 
 import java.util.*;

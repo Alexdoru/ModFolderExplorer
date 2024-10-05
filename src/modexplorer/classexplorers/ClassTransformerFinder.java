@@ -1,9 +1,9 @@
 package modexplorer.classexplorers;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.ClassVisitor;
-import jdk.internal.org.objectweb.asm.MethodVisitor;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import modexplorer.Main;
 
 public class ClassTransformerFinder extends ClassVisitor implements ClassExplorer {
@@ -26,11 +26,11 @@ public class ClassTransformerFinder extends ClassVisitor implements ClassExplore
     }
 
     @Override
-    public MethodVisitor visitMethod(int i, String s, String s1, String s2, String[] strings) {
-        if (s.equals("transform") && s1.equals("(Ljava/lang/String;Ljava/lang/String;[B)[B")) {
+    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        if (name.equals("transform") && desc.equals("(Ljava/lang/String;Ljava/lang/String;[B)[B")) {
             log();
         }
-        return super.visitMethod(i, s, s1, s2, strings);
+        return super.visitMethod(access, name, desc, signature, exceptions);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package modexplorer;
 
-import jdk.internal.org.objectweb.asm.ClassVisitor;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ModClassVisitor extends ClassVisitor {
 
@@ -16,13 +16,6 @@ public class ModClassVisitor extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.classname = name;
-        //if (interfaces != null) {
-        //    for (String anInterface : interfaces) {
-        //        if (anInterface.endsWith("IMixinConfigPlugin")) {
-        //            Main.log(getClassLocation() + " has interface " + anInterface);
-        //        }
-        //    }
-        //}
     }
 
     //@Override
