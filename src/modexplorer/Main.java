@@ -76,6 +76,7 @@ public class Main {
         // classExplorers.add(new ClassTransformerFinder());
         // classExplorers.add(new EnumValuesCallsitesFinder());
         // classExplorers.add(new GLEnabledDisabledTracker());
+        // classExplorers.add(new SubscribeEventFinder());
     }
 
     public static void log(String message) {
