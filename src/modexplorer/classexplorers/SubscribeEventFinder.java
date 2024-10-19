@@ -84,11 +84,15 @@ public class SubscribeEventFinder extends ClassVisitor implements ClassExplorer 
         final LinkedHashMap<String, List<String>[]> sortedMap = sortByKey(handlers);
         for (Map.Entry<String, List<String>[]> entry : sortedMap.entrySet()) {
             Main.log("-------- " + entry.getKey().substring(1, entry.getKey().length() - 1) + " --------");
+            int index = 0;
             final List<String>[] array = entry.getValue();
             for (int i = 0; i < array.length; i++) {
                 EventPriority priority = VALUES[i];
                 List<String> list = array[i];
-                list.forEach(s -> Main.log(priority.name() + " " + s));
+                for (String s : list) {
+                    Main.log(index + " " + priority.name() + " " + s);
+                    index++;
+                }
             }
             Main.log(" ");
             Main.log(" ");
