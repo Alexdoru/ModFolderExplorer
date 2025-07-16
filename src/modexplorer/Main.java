@@ -1,7 +1,7 @@
 package modexplorer;
 
-import org.objectweb.asm.ClassReader;
 import modexplorer.classexplorers.ClassExplorer;
+import org.objectweb.asm.ClassReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -139,12 +139,23 @@ public class Main {
         }
     }
 
+    //final static ClassConstantPoolParser cstParser = new ClassConstantPoolParser(
+    //        "com/cleanroommc/bogosorter/api/ISlot"
+    //);
+
     private static void exploreClass(byte[] classBytes, String fileName) {
+        //if (cstParser.find(classBytes)) {
+        //    log(fileName);
+        //}
         final ClassReader classReader = new ClassReader(classBytes);
         for (ClassExplorer explorer : classExplorers) {
             explorer.visitClass(classReader, fileName);
         }
+
         //classReader.accept(new ModClassVisitor(fileName), ClassReader.SKIP_DEBUG);
+
+        //ClassNode cn = new ClassNode();
+        //classReader.accept(cn, 0);
     }
 
     private static byte[] readClass(InputStream is) throws IOException {
