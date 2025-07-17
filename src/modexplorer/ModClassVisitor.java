@@ -27,7 +27,7 @@ public class ModClassVisitor extends ClassVisitor {
 
     //@Override
     //public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-    //    return new ModMethodVisitor(getClassLocation(), name, desc);
+    //    return new ModMethodVisitor(name, desc);
     //}
 
     private String getClassLocation() {
