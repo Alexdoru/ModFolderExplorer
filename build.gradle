@@ -33,3 +33,5 @@ dependencies {
     implementation("org.ow2.asm:asm-analysis:${asmVersion}")
     implementation("org.ow2.asm:asm-util:${asmVersion}")
 }
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
