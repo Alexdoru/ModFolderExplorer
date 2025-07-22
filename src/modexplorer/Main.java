@@ -105,16 +105,17 @@ public class Main {
         int classCount = 0;
         for (final File file : jarFiles) {
             try (final JarFile jar = new JarFile(file)) {
-                if (file.getName() != null && file.getName().startsWith("forgelin")) {
+                if (file.getName().startsWith("forgelin")) {
                     continue;
                 }
                 for (final ZipEntry ze : Collections.list(jar.entries())) {
-                    if (ze.getName() != null && ze.getName().startsWith("__MACOSX")) {
+                    final String classFileName = ze.getName();
+                    if (classFileName.startsWith("__MACOSX")) {
                         continue;
                     }
-                    if (classPattern.matcher(ze.getName()).matches()) {
+                    if (classPattern.matcher(classFileName).matches()) {
                         try (final InputStream inputStream = jar.getInputStream(ze)) {
-                            exploreClass(readClass(inputStream), file.getName());
+                            exploreClass(readClass(inputStream), file.getName(), classFileName);
                             classCount++;
                         } catch (Exception e) {
                             System.out.println("There was an error attempting to parse " + file + "/" + ze);
@@ -127,7 +128,7 @@ public class Main {
         }
         for (File file : classFiles) {
             try (InputStream inputStream = Files.newInputStream(file.toPath())) {
-                exploreClass(readClass(inputStream), file.getPath());
+                exploreClass(readClass(inputStream), null, file.getPath());
                 classCount++;
             } catch (IOException e) {
                 System.out.println("Error reading " + file);
@@ -143,16 +144,16 @@ public class Main {
     //        "com/cleanroommc/bogosorter/api/ISlot"
     //);
 
-    private static void exploreClass(byte[] classBytes, String fileName) {
+    private static void exploreClass(byte[] classBytes, String jarFileName, String classFileName) {
         //if (cstParser.find(classBytes)) {
-        //    log(fileName);
+        //    log(classFileName);
         //}
         final ClassReader classReader = new ClassReader(classBytes);
         for (ClassExplorer explorer : classExplorers) {
-            explorer.visitClass(classReader, fileName);
+            explorer.visitClass(classReader, jarFileName);
         }
 
-        //classReader.accept(new ModClassVisitor(fileName), ClassReader.SKIP_DEBUG);
+        //classReader.accept(new ModClassVisitor(jarFileName), ClassReader.SKIP_DEBUG);
 
         //ClassNode cn = new ClassNode();
         //classReader.accept(cn, 0);
