@@ -106,14 +106,8 @@ public class Main {
         int classCount = 0;
         for (final File file : jarFiles) {
             try (final JarFile jar = new JarFile(file)) {
-                if (file.getName().startsWith("forgelin")) {
-                    continue;
-                }
                 for (final ZipEntry ze : Collections.list(jar.entries())) {
                     final String classFileName = ze.getName();
-                    if (classFileName.startsWith("__MACOSX")) {
-                        continue;
-                    }
                     if (classPattern.matcher(classFileName).matches()) {
                         try (final InputStream inputStream = jar.getInputStream(ze)) {
                             exploreClass(readClass(inputStream), file.getName(), classFileName);
