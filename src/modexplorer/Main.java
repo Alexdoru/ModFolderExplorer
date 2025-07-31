@@ -48,6 +48,7 @@ public class Main {
         setupLogger();
         registerExplorers();
         exploreFiles(modFileList, classFileList);
+        if (printStream != null) printStream.close();
     }
 
     private static void setupLogger() {
