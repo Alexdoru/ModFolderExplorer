@@ -123,7 +123,7 @@ public class Main {
         }
         for (File file : classFiles) {
             try (InputStream inputStream = Files.newInputStream(file.toPath())) {
-                exploreClass(readClass(inputStream), null, file.getPath());
+                exploreClass(readClass(inputStream), "", file.getPath());
                 classCount++;
             } catch (IOException e) {
                 System.out.println("Error reading " + file);
