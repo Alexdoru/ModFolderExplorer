@@ -70,7 +70,7 @@ public class ModClassVisitor extends ClassVisitor {
         //@Override
         //public void visitFieldInsn(int opcode, String owner, String name, String desc) {
         //    if (owner.equals("") && name.equals("")) {
-        //        log("field access " + name);
+        //        log("field access " + owner + "." + name + ";" + desc);
         //    }
         //}
 
