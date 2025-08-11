@@ -48,6 +48,7 @@ public class Main {
         setupLogger();
         registerExplorers();
         exploreFiles(modFileList, classFileList);
+        onSearchEnd();
         if (printStream != null) printStream.close();
     }
 
@@ -130,9 +131,6 @@ public class Main {
             }
         }
         System.out.println("Visited " + classCount + " classes in " + (System.currentTimeMillis() - time) + "ms");
-        for (ClassExplorer explorer : classExplorers) {
-            explorer.onSearchEnd();
-        }
     }
 
     //final static ClassConstantPoolParser cstParser = new ClassConstantPoolParser(
@@ -152,6 +150,12 @@ public class Main {
 
         //ClassNode cn = new ClassNode();
         //classReader.accept(cn, 0);
+    }
+
+    private static void onSearchEnd() {
+        for (ClassExplorer explorer : classExplorers) {
+            explorer.onSearchEnd();
+        }
     }
 
     private static byte[] readClass(InputStream is) throws IOException {
