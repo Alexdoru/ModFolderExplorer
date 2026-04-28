@@ -22,7 +22,6 @@ public class Main {
     private static PrintStream printStream;
     private static final Pattern zipJarFilePattern = Pattern.compile("(.+)\\.(zip|jar)$");
     private static final Pattern classFilePattern = Pattern.compile("(.+)\\.class$");
-    private static final Pattern classPattern = Pattern.compile("[^\\s$]+(\\$\\S+)?\\.class$");
     private static final List<ClassExplorer> classExplorers = new ArrayList<>();
 
     /**
@@ -90,9 +89,10 @@ public class Main {
         if (fList != null) {
             for (final File file : fList) {
                 if (file.isFile()) {
-                    if (zipJarFilePattern.matcher(file.getName()).matches()) {
+                    final String fileName = file.getName();
+                    if (zipJarFilePattern.matcher(fileName).matches()) {
                         jarFiles.add(file);
-                    } else if (classFilePattern.matcher(file.getName()).matches()) {
+                    } else if (classFilePattern.matcher(fileName).matches()) {
                         classFiles.add(file);
                     }
                 } else if (file.isDirectory()) {
@@ -108,10 +108,10 @@ public class Main {
         for (final File file : jarFiles) {
             try (final JarFile jar = new JarFile(file)) {
                 for (final ZipEntry ze : Collections.list(jar.entries())) {
-                    final String classFileName = ze.getName();
-                    if (classPattern.matcher(classFileName).matches()) {
+                    final String fileName = ze.getName();
+                    if (classFilePattern.matcher(fileName).matches()) {
                         try (final InputStream inputStream = jar.getInputStream(ze)) {
-                            exploreClass(readClass(inputStream), file.getName(), classFileName);
+                            exploreClass(readClass(inputStream), file.getName(), fileName);
                             classCount++;
                         } catch (Exception e) {
                             System.out.println("There was an error attempting to parse " + file + "/" + ze);
